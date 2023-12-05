@@ -1,4 +1,4 @@
-# Spring Boot Backend Application
+# Spring Boot CRUD Operations with MongoDB and Security Features
 
 This is a Spring Boot backend application for managing persons. It provides basic CRUD (Create, Read, Update, Delete) operations for a `Person` entity.
 
@@ -9,6 +9,7 @@ This is a Spring Boot backend application for managing persons. It provides basi
   - [Installation](#installation)
 - [Usage](#usage)
   - [API Endpoints](#api-endpoints)
+- [Testing](#testing)
 
 ## Getting Started
 
@@ -71,3 +72,17 @@ Content-Type: application/json
   "college":"Indian Institute of Technology Roorkee"
 }
 ```
+
+## Testing
+
+To run the JUnit tests, Click on run button in this file:
+
+```bash
+src\test\java\com\shivam6862\LearningSpringBoot\testing\PersonRepoTest.java
+```
+
+### Thank You
+
+Thank you for exploring this Spring Boot backend application! I hope you find it useful and informative. If you have any questions, issues, or suggestions, feel free to open an issue. Your feedback is greatly appreciated.
+
+**Happy coding! 🚀**
