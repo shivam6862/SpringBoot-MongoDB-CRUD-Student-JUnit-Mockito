@@ -13,27 +13,25 @@ import jakarta.validation.constraints.NotBlank;
 public class Person {
     // 0.
     @Id
-    private final UUID id;
+    private UUID id;
     @NotBlank
-    private final String name;
+    private String name;
     @NotBlank
-    private final String email;
+    private String email;
     @NotBlank
-    private final String branch;
+    private String branch;
     @NotBlank
-    private final String semester;
+    private String semester;
     @NotBlank
-    private final String enrollment;
+    private String enrollment;
     @NotBlank
-    private final String college;
+    private String college;
 
     public Person(@JsonProperty("id") UUID id, @JsonProperty("name") String name, @JsonProperty("email") String email,
             @JsonProperty("branch") String branch, @JsonProperty("semester") String semester,
             @JsonProperty("enrollment") String enrollment, @JsonProperty("college") String college) {
-        if (id == null)
-            this.id = UUID.randomUUID();
-        else
-            this.id = id;
+
+        this.id = (id == null) ? UUID.randomUUID() : id;
         this.name = name;
         this.email = email;
         this.branch = branch;
@@ -68,6 +66,34 @@ public class Person {
 
     public String getCollege() {
         return college;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setBranch(String branch) {
+        this.branch = branch;
+    }
+
+    public void setSemester(String semester) {
+        this.semester = semester;
+    }
+
+    public void setEnrollment(String enrollment) {
+        this.enrollment = enrollment;
+    }
+
+    public void setCollege(String college) {
+        this.college = college;
     }
 
     public static Person of(UUID id, String name, String email, String branch, String semester, String enrollment,
