@@ -35,4 +35,9 @@ public class PersonDataAccessService implements PersonDao {
     public int updatePersonById(UUID id, Person update_person) {
         return 0;
     }
+
+    @Override
+    public List<Person> selectAllPeopleError() {
+        return null;
+    }
 }

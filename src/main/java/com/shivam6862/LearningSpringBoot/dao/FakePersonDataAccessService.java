@@ -55,4 +55,9 @@ public class FakePersonDataAccessService implements PersonDao {
             }
         }).orElse(0);
     }
+
+    @Override
+    public List<Person> selectAllPeopleError() {
+        return null;
+    }
 }

@@ -1,5 +1,6 @@
 package com.shivam6862.LearningSpringBoot.dao;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -23,4 +24,5 @@ public interface PersonDao {
 
     int updatePersonById(UUID id, Person person);
 
+    List<Person> selectAllPeopleError() throws SQLException;
 }

@@ -1,9 +1,12 @@
 package com.shivam6862.LearningSpringBoot.testing;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 // import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.atMost;
 import static org.mockito.Mockito.atMostOnce;
+import static org.mockito.Mockito.doReturn;
+// import static org.mockito.Mockito.doThrow;
 // import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -11,12 +14,15 @@ import static org.mockito.Mockito.verify;
 // import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.UUID;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -24,8 +30,13 @@ import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+
 import com.shivam6862.LearningSpringBoot.dao.PersonDao;
 import com.shivam6862.LearningSpringBoot.dao.PersonDataAccessMockService;
+import com.shivam6862.LearningSpringBoot.exception.DatabaseReadException;
+// import com.shivam6862.LearningSpringBoot.exception.DatabaseWriteException;
 import com.shivam6862.LearningSpringBoot.model.Person;
 
 import java.util.List;
@@ -42,6 +53,9 @@ public class PersonRepoMockTest {
 
         @Spy
         private PersonDao personDao2;
+
+        @Captor
+        private ArgumentCaptor<Person> personArgumentCaptor;
 
         @Test
         @DisplayName("Create Mocks Using Annotations")
@@ -181,4 +195,114 @@ public class PersonRepoMockTest {
                 verify(personDao2, atMost(2)).insertPerson(person1);
                 verify(personDao2, atMostOnce()).insertPerson(person1);
         }
+
+        @Test
+        @DisplayName("Create Mocks Using Exception Handling")
+        public void demoCreateMocksUsingExceptionHandling() throws SQLException {
+                // Mockito allows you to stub methods to throw exceptions, enabling you to test
+                // how your code handles exceptional scenarios.
+                when(personDao.selectAllPeopleError()).thenThrow(SQLException.class);
+                // when(personDao.selectAllPeopleError()).thenThrow(new SQLException("Database
+                // not available"));
+                // given(personDao.selectAllPeopleError()).willThrow(SQLException.class);
+                assertThrows(DatabaseReadException.class, () -> personDataAccessMockService.getselectAllPeopleError());
+
+                // doThrow(SQLException.class).when(personDao).deletePersonById(UUID.randomUUID());
+                // assertThrows(DatabaseWriteException.class, () ->
+                // personDataAccessMockService.getselectAllPeopleError());
+
+        }
+
+        @Test
+        @DisplayName("Create Mocks Using Argument Captor")
+        public void demoCreateMocksUsingArgumentCaptor() {
+                // An argument captor is used to capture and inspect the arguments passed to a
+                // mocked method during verification. It helps in asserting the values passed to
+                // the method.
+                UUID randomUUID1 = UUID.randomUUID();
+                Person person1 = new Person(
+                                randomUUID1,
+                                "Shrey mapwal",
+                                "Shrey@gmail.com",
+                                "Mechanical Engineering",
+                                "6",
+                                "21117121",
+                                "IIT Roorkee");
+
+                personDao.insertPerson(person1);
+                verify(personDao).insertPerson(personArgumentCaptor.capture());
+                Person capturedPerson = personArgumentCaptor.getValue();
+                assertEquals(person1, capturedPerson);
+        }
+
+        @Test
+        @DisplayName("Create Mocks Using MockitoSpy")
+        public void demoCreateMocksUsingMockitoSpy() {
+                // Spies in Mockito allow you to create a partial mock of a real object, meaning
+                // you can spy on a real instance and selectively stub or verify methods as
+                // needed.
+                UUID randomUUID1 = UUID.randomUUID();
+                Person person1 = new Person(
+                                randomUUID1,
+                                "Shrey mapwal",
+                                "Shrey@gmail.com",
+                                "Mechanical Engineering",
+                                "6",
+                                "21117121",
+                                "IIT Roorkee");
+
+                doReturn(Optional.of(person1)).when(personDao2).selectPersonById(randomUUID1);
+                Optional<Person> personOptional = personDao2.selectPersonById(randomUUID1);
+                assertEquals(Optional.of(person1), personOptional);
+        }
+
+        @Test
+        @DisplayName("Create Mocks Using Behavior-Driven Development")
+        public void demoCreateMocksUsingBehaviorDrivenDevelopment() {
+                // BDD is an approach to software development that emphasizes collaboration
+                // between developers, QA, and non-technical stakeholders. In the context of
+                // Mockito, BDD-style syntax helps express tests in a more natural language.
+                UUID randomUUID1 = UUID.randomUUID();
+                Person person1 = new Person(
+                                randomUUID1,
+                                "Shrey mapwal",
+                                "Shrey@gmail.com",
+                                "Mechanical Engineering",
+                                "6",
+                                "21117121",
+                                "IIT Roorkee");
+
+                given(personDao.selectPersonById(randomUUID1)).willReturn(Optional.of(person1));
+                then(personDao).shouldHaveNoInteractions();
+                Optional<Person> personOptional = personDao.selectPersonById(randomUUID1);
+                then(personDao).should(times(1)).selectPersonById(randomUUID1);
+                assertEquals(Optional.of(person1), personOptional);
+                then(personDao).shouldHaveNoMoreInteractions();
+
+        }
+
+        @Test
+        @DisplayName("Create Mocks Using Argument Matchers")
+        public void demoCreateMocksUsingArgumentMatchers() {
+                // Mockito provides argument matchers to make it more flexible when verifying or
+                // stubbing methods that take arguments. Matchers allow you to specify
+                // conditions rather than exact values.
+                UUID randomUUID1 = UUID.randomUUID();
+                Person person1 = new Person(
+                                randomUUID1,
+                                "Shrey mapwal",
+                                "Shrey@gmail.com",
+                                "Mechanical Engineering",
+                                "6",
+                                "21117121",
+                                "IIT Roorkee");
+
+                when(personDao.selectPersonById(Mockito.any(UUID.class))).thenReturn(Optional.of(person1));
+                Optional<Person> personOptional = personDao.selectPersonById(randomUUID1);
+                assertEquals(Optional.of(person1), personOptional);
+                // any(), anyString(), anyInt(), anyBoolean(), anyList(), anyMap(), anySet(),
+                // ,anyCollection(), anyLong(), anyDouble(), anyFloat(), anyShort(), anyByte()
+                // anyChar(), anyObject(), anyVararg(), anySetOf(),
+        }
+
 }
