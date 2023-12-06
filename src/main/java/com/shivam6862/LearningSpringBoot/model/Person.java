@@ -1,5 +1,6 @@
 package com.shivam6862.LearningSpringBoot.model;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import org.springframework.data.annotation.Id;
@@ -99,5 +100,22 @@ public class Person {
     public static Person of(UUID id, String name, String email, String branch, String semester, String enrollment,
             String college) {
         return new Person(id, name, email, branch, semester, enrollment, college);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass())
+            return false;
+        Person person = (Person) obj;
+        return id == person.id &&
+                Objects.equals(email, person.email) &&
+                Objects.equals(enrollment, person.enrollment);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, email, enrollment);
     }
 }
